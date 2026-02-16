@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+        <title> Login</title>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+
+      <%- include('partials/nav') %>
+<main>
+      <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm" action="/login" method="POST">
+            <label for="username">Jouw Gebruikersnaam:</label>
+            <input type="text" id="username" name="username" required>
+    
+            <label for="password">Wachtwoord:</label>
+            <input type="password" id="password" name="password" required>
+    
+            <button id="loginSubmit" type="submit">Login</button>
+        </form>
+    </div>
+    <p class="geenAcc">Heb je nog geen account? <a href="/register">maak hier een account</a></p>
+        <script src="script.js"></script>
+      </main>
+      </body>
+</html>

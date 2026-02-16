@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "name": "wieverz",
+      "password": "wachtwoordw"
+    },
+    {
+      "name": "cascky",
+      "password": "wachtwoordc"
+    },
+    {
+      "name": "luwnaa",
+      "password": "wachtwoordl"
+    },
+    {
+      "name": "yupjoy",
+      "password": "wachtwoordj"
+    },
+    {
+      "name": "wietse verhagen",
+      "password": "hallo"
+    },
+    {
+      "name": "danny",
+      "password": "docent"
+    }
+  ]
+}

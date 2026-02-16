@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <title>Studenten Overzicht</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <%- include('partials/nav') %>
+
+    <main>
+        <h1>Onze Studenten</h1>
+        <ul>
+            <% studenten.forEach(student => { %>
+                <li>
+                    <strong><%= student.naam %></strong> 
+                    (<%= student.specialisatie %>)
+                </li>
+            <% }) %>
+        </ul>
+    </main>
+</body>
+</html>

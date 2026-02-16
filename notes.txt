@@ -1,0 +1,111 @@
+Tech 
+werkgroep 5
+NodeJS:
+
+HTTP:
+Browser - request:
+HTTP get ….html
+V
+200 = ok code
+
+HTTP - request:
+HTTP get ….css
+V
+200 ok
+
+Get is opvragen
+Post is sturen naar server
+
+Main server codes:
+200 = ok
+404 = niet gevonden
+500 = server error
+
+Port:3000 is de standaard voor servers
+
+
+Werkgroep 6
+Werken met ijs - oftewel templates,
+Werken in de static map, als verschillende basis die afgestemd is per gebruiker of onderwerp
+
+Ejs zoekt naar view of views map
+
+Ejs is puur voor server, browser zet het om naar html
+
+Els syntax:
+ <% Alles tussen %>
+
+Alles wat je met een waarde wil opnemen:
+<%= Output html geëscaleerde data: %=>
+
+<%- Output ongeescapeerde data -%>
+
+<%# comments #%>
+
+Res. Locals zijn een soort variabelen in ejs templates
+
+TO DO
+EJS uitvogelen.
+
+- voor de api data in de static file
+ik moest de data.json file in de static map zetten, en dan in de script.js de fetch functie zetten.
+
+nadat dit was gelukt heb ik een aparte map gemaakt voor de data om de api in te tonen zodat deze nu alleen te zien is bij "localhost... /data"
+
+-----------------
+
+WEEK 2
+werkgroep 7
+
+formulieren.
+meest standaard manier is .post gebruiken, om te versturen
+
+.Patch is om bestaande data te updaten
+
+.delete is voor verwijderen
+
+.put wordt niet echt gebruikt, is een beetje hetzelfde als post
+
+
+.post:
+{titel van data set}.post({
+
+ })
+*/ data wordt niet opgeslagen of naar een database gestuurd */
+
+bij een form:
+<form action('/') /* aangeven waar die naar toe moet */ method="..." de method wat je gebruikt, bijv post
+
+login:
+basic login functie
+async function login() {
+    
+    const usernameInput = document.getElementById('username')
+    const passwordInput = document.getElementById('password')
+    
+    // haal de wachtwoorden op uit het JSON-bestand
+    // gebruik await omdat getCredentials async functie is
+     try {
+        // haal de wachtwoorden op uit het JSON-bestand
+        const users = await getUsers()
+
+        // probeer de gebruiker met de opgegeven gebruikersnaam te vinden in de array met gebruikers
+        // als deze gebruiker niet bestaat zal myUser undefined zijn
+        const myUser = users.find(x => x.name === usernameInput.value)
+        if (myUser) {
+            console.log('Gebruiker gevonden: ', myUser)
+        } else {
+            console.log('Gebruiker niet gevonden')
+        }
+        
+        // controleer of we een gebruiker met deze gebruikersnaam hebben gevonden en zo ja, 
+        // of het wachtwoord overeenkomt
+        if (myUser && myUser.password === passwordInput.value) {
+            alert('Login successful!')
+        } else {
+            alert('Invalid username or password')
+        }
+    } catch (error) {
+        console.error('Er is een fout opgetreden bij het inloggen:', error)
+    }
+}

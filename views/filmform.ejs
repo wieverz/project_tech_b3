@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>formulier pagina</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <%- include('partials/nav') %>
+  
+  <form action="/film" method="post">
+    <label for= "ftitel" > film titel </label>
+    <input type="text" id="ftitel" name="ftitel">
+  
+    <label for="fcontext"> beschrijf hier jouw film.</label>
+    <input type="text" id="fcontext" name="fcontext">
+  
+    <input type="submit" value="voeg jouw film toe">
+  </form>
+  <h2>Alle Films:</h2>
+<ul>
+  <% films.forEach(f => { %>
+    <li>
+      <strong><%= f.ftitel %></strong>: <%= f.fcontext %>
+    </li>
+  <% }); %>
+</ul>
+
+  <script src="script.js"></script>
+</body>
+</html>

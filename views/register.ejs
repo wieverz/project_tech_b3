@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registreer</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<%- include('partials/nav') %>
+<main>
+<div class="container">
+    <h2>Nieuw account aanmaken</h2>
+    <form action="/register" method="POST">
+        <label for="username">Kies een gebruikersnaam:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Kies een wachtwoord:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Account aanmaken</button>
+    </form>
+    <p>Heb je al een account? <a href="/login">Log hier in</a></p>
+</div>
+</main>
+</body>
+</html>
