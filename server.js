@@ -69,6 +69,7 @@ run().catch(console.dir);
 
 // // ////////////////// STATIC // ////////////////// 
 app.get('/', (req, res) => {
+  res.render('index')
   res.send('Hello World!')
 });
 
