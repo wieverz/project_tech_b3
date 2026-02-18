@@ -7,12 +7,13 @@ app.use(express.urlencoded({ extended: true })); // deze moet ook blijkbaar
 app.use(express.static("static"));
 
 app.set('view engine', 'ejs');
+app.set('views', './views');
 
 
 /////// green vanwege mongo db test:
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-require('dotenv').config(); // Dit laadt de variabelen uit je .env bestand
+require('dotenv').config();
 
 // Gebruik de variabele uit je .env bestand
 const uri = process.env.URI; 
@@ -25,47 +26,42 @@ const client = new MongoClient(uri, {
   }
 });
 
+
 async function run() {
   try {
-    // 1. Maak verbinding met de server
+    // 1 verbinding maken
     await client.connect();
 
-    // 2. Optioneel: Ping de database om te checken of het werkt
+    // 2 check of t werk
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-    // 3. Kies de database en collectie
-    const database = client.db("sample_mflix");
-    const movies = database.collection("movies");
-
-    // 4. Stel de zoekopdracht (query) in
-    const query = { runtime: { $lt: 15 } };
-    const sortFields = { title: 1 };
-    const projectFields = { _id: 0, title: 1, imdb: 1 };
-
-    // 5. Voer de zoekopdracht uit
-    const cursor = movies.find(query).sort(sortFields).project(projectFields);
-
-    // 6. Check of er resultaten zijn en print ze
-    if ((await movies.countDocuments(query)) === 0) {
-      console.log("No documents found!");
-    }
-
-    for await (const doc of cursor) {
-      console.dir(doc);
-    }
-
   } catch (error) {
-    // Het is slim om fouten hier op te vangen
+    // foutjes..
     console.error("Er ging iets mis:", error);
-  } finally {
-    // 7. Sluit de verbinding ALTIJD, of het nu lukte of niet
-    await client.close();
   }
 }
-
 run().catch(console.dir);
 
+// Gebruik de variabelenaam uit je .env (zonder punt of extra aanhalingstekens)
+const collectionName = process.env.DB_COLLECTION || "movies"; 
+const collection = client.db("sample_mflix").collection(collectionName);
+
+async function listAllMovies(req, res) {
+    try {
+        // Haal alle data op en zet het om naar een Array
+        const data = await collection.find().toArray();
+        
+        // Stuur de data naar je EJS template
+        res.render('list.ejs', { data: data });
+    } catch (error) {
+        console.error("Fout bij ophalen movies:", error);
+        // res.status(500).send("Server Error");
+    }
+}
+
+
+app.get('/movies', listAllMovies);
 
 // // ////////////////// STATIC // ////////////////// 
 app.get('/', (req, res) => {

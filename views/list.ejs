@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <%- include('partials/nav') %>
+        <main>
+        <h1>movie list</h1>
+        
+        <ul>
+          <% data.forEach(movie => { %>
+            <li><%= movie.title %></li>
+          <% }) %>
+        </ul>
+        
+        <script src="script.js"></script>
+    </main>
+    </body>
+</html>
