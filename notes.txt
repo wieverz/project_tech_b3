@@ -109,3 +109,58 @@ async function login() {
         console.error('Er is een fout opgetreden bij het inloggen:', error)
     }
 }
+
+
+week 3:
+
+
+MongoDB
+
+server is weird ash
+
+Find functie:
+
+const db = client.db(process.env."gebruiker naam")
+const collectie = db.collection(process.env."collection naam")
+async funtion listAllMovies(req,res) {
+    find:
+    data = await collection.find().toArray()
+    res.render('list.ejs',{data: data})
+    
+    findOne:
+    // data = await colelction.findOne ({ // liever naar het object id, = accurater
+        title.
+    })
+
+    insterOne:
+    result = await colelction.insterOne
+
+    update:
+    const result = await collection.updateOne({
+        _id:
+    })
+
+    delete:
+    const result = await collection.deleteOne
+}
+
+    // // 3 database en collectie
+    // const database = client.db("sample_mflix");
+    // const movies = database.collection("movies");
+
+    // // 4 zoekopdracht maken
+    // const query = { runtime: { $lt: 15 } };
+    // const sortFields = { title: 1 };
+    // const projectFields = { _id: 0, title: 1, imdb: 1 };
+
+    // // 5 zoeken uitvoeren
+    // const cursor = movies.find(query).sort(sortFields).project(projectFields);
+
+    // // 6 resultaten in de console.log
+    // if ((await movies.countDocuments(query)) === 0) {
+    //   console.log("No documents found!");
+    // }
+
+    // for await (const doc of cursor) {
+    //   console.dir(doc);
+    // }

@@ -8,11 +8,14 @@
     <body>
         <%- include('partials/nav') %>
         <main>
-        <h1>pagina in de static map</h1>
-        <p>ik snap dr geen ene <i>kut</i>  van</p>
+        <h1>movie list</h1>
+        
         <ul>
-            
+          <% data.forEach(movie => { %>
+            <li><%= movie.title %></li>
+          <% }) %>
         </ul>
+        
         <script src="script.js"></script>
     </main>
     </body>
