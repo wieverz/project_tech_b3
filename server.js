@@ -12,12 +12,12 @@ app.set('views', './views');
 
 /////// green vanwege mongo db test:
 const { MongoClient, ServerApiVersion } = require("mongodb");
-
 require('dotenv').config();
 
-// Gebruik de variabele uit je .env bestand
-const uri = process.env.URI; 
+// 1. Maak de variabele hier globaal aan
+let moviesCollection;
 
+const uri = process.env.URI; 
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -26,42 +26,34 @@ const client = new MongoClient(uri, {
   }
 });
 
-
 async function run() {
   try {
-    // 1 verbinding maken
     await client.connect();
-
-    // 2 check of t werk
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
+    // 2. Vul de variabele zodra de verbinding staat
+    const collectionName = process.env.DB_COLLECTION || "movies"; 
+    moviesCollection = client.db("sample_mflix").collection(collectionName);
+
   } catch (error) {
-    // foutjes..
-    console.error("Er ging iets mis:", error);
+    console.error("Er ging iets mis bij het verbinden:", error);
   }
 }
 run().catch(console.dir);
 
-// Gebruik de variabelenaam uit je .env (zonder punt of extra aanhalingstekens)
-const collectionName = process.env.DB_COLLECTION || "movies"; 
-const collection = client.db("sample_mflix").collection(collectionName);
-
-async function listAllMovies(req, res) {
+async function listMovies(req, res) {
     try {
-        // Haal alle data op en zet het om naar een Array
-        const data = await collection.find().toArray();
-        
-        // Stuur de data naar je EJS template
+        // Gebruik de globale moviesCollection
+        const data = await moviesCollection.find().toArray();
         res.render('list.ejs', { data: data });
     } catch (error) {
         console.error("Fout bij ophalen movies:", error);
-        // res.status(500).send("Server Error");
+        res.status(500).send("Fout bij ophalen data uit database.");
     }
 }
 
-
-app.get('/movies', listAllMovies);
+app.get('/movies', listMovies);
 
 // // ////////////////// STATIC // ////////////////// 
 app.get('/', (req, res) => {
@@ -78,6 +70,31 @@ app.get('/', (req, res) => {
 // });
 
 // ////////////////// PAGINA'S // ////////////////// 
+
+// De "Voordeur": Hier kan de gebruiker naartoe surfen
+app.get('/add', (req, res) => {
+  res.render('add-movie.ejs'); // Zorg dat dit bestand in je /views map staat
+});
+
+app.post('/add-movie', async (req, res) => {
+  try {
+      // De data uit het formulier zit in req.body
+      const newMovie = {
+          title: req.body.title,
+          runtime: Number(req.body.runtime), // Zet om naar een getal
+          addedAt: new Date()
+      };
+
+      // Voeg toe aan de collectie (we gebruiken de variabele van de vorige stap)
+      await moviesCollection.insertOne(newMovie);
+
+      console.log("Film toegevoegd!");
+      res.redirect('/movies'); // Stuur de gebruiker terug naar de lijst
+  } catch (err) {
+      console.error("Fout bij opslaan:", err);
+      res.status(500).send("Kon de film niet opslaan.");
+  }
+});
 
 app.get('/film', (req, res) => {
   console.log('GET route wordt aangeroepen - we gaan de pagina renderen');
