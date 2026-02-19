@@ -15,6 +15,15 @@
             <li><%= movie.title %></li>
           <% }) %>
         </ul>
+        <% if (data.length === 100) { %>
+          <div class="zieMeerKnopDiv">
+              <a class="zieMeerKnop" href="/movies?page=<%= nextPage %>">
+                  Zie meer
+              </a>
+          </div>
+      <% } else { %>
+          <p>Dit waren alle films!</p>
+      <% } %>
         
         <script src="script.js"></script>
     </main>

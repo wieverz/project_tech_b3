@@ -164,3 +164,36 @@ async funtion listAllMovies(req,res) {
     // for await (const doc of cursor) {
     //   console.dir(doc);
     // }
+
+
+Week 3 - 19 feb:
+
+- document in MongoDB:
+binnen een collection heb je meerdere documents
+collection:
+- users
+- - {id:3123123123, naam"blabla",...} {document} <- dit is een document
+- - {id:1212111212, naam"andersblabla",matches:[121212],[24523423423],...} {document} <- dit is een document
+-
+collection:
+- personeel
+- - {id:"53421", naam"danny", stad:"amsterdam"...} {document}
+collection:
+- steden
+- - {stad:"amsterdam", personeel:[123,456,789,...]}
+
+iedere keer als iemand registreerd, en aangeeft dat die bijvoorbeeld in amsterdam woont. voeg je de ID van die registratie toe aan de collectie van de stad, zodat je makkelijk kan matchen o.b.v. locatie, en hier niet los op hoeven filteren.
+hiermee hoef je niet een paar honderd keer voor elk persoon te kijken waar ze vandaan komen, maar eerst kijken of ze uit amsterdam komen en dan pas weergeven.
+
+is handig om beide te doen, zodat je ook nog kan kijken dat diegene uit dammie komt ook wanneer je niet filtert op stad.
+
+je kan dit verdiepen door nog een collectie aan te maken qua type, en daarin alle id's opnieuw filteren:
+collection:
+- beroep:
+- - {beroep:"camera":, personeel:[123,456,23434,567]}
+
+is iets lastiger te begrijpen, maar uiteindelijk waarschijnlijk beter en mogelijk sneller.
+
+hw/ oefening voor mezelf:
+probeer een nieuw account aan te maken.
+- 

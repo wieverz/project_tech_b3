@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/style.css">
   <title>add movie page</title>
 </head>
 <body>
   <%- include('partials/nav') %>
   <main>
-  <form action="/add-movie" method="POST">
+  <form class="addFilmForm" action="/add-movie" method="POST">
     <input type="text" name="title" placeholder="Film titel" required>
     <input type="number" name="runtime" placeholder="Duur in minuten">
     <button type="submit">Opslaan</button>

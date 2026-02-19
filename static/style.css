@@ -51,7 +51,19 @@ form {
   flex-wrap: wrap;
   justify-content: flex-start; 
 }
-
+.addFilmForm{
+  background: lightgray;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-width: 200px;
+  margin: 20px auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+} .addFilmForm input {
+  margin: 15px;
+}
 
 /* input[type="text"] {
   width: 100%;
@@ -107,4 +119,22 @@ form {
   max-width: 500px;
 }.geenAcc a:visited {
   text-decoration: none;
+}
+
+/* /////// */
+.zieMeerKnopDiv{
+  margin-top: 20px;
+  text-align: center;
+}
+.zieMeerKnop{
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+} .zieMeerKnop:hover{
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  padding: 15px;
 }

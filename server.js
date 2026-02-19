@@ -42,18 +42,41 @@ async function run() {
 }
 run().catch(console.dir);
 
-async function listMovies(req, res) {
-    try {
-        // Gebruik de globale moviesCollection
-        const data = await moviesCollection.find().toArray();
-        res.render('list.ejs', { data: data });
-    } catch (error) {
-        console.error("Fout bij ophalen movies:", error);
-        res.status(500).send("Fout bij ophalen data uit database.");
-    }
+// async function listAllMovies(req, res) { // oude versie, de nieuwe stopt na 200 films om de pagina sneller te laden.
+//     try {
+//         // Gebruik de globale moviesCollection
+//         const data = await moviesCollection.find().toArray();
+//         res.render('list.ejs', { data: data });
+//     } catch (error) {
+//         console.error("Fout bij ophalen movies:", error);
+//         res.status(500).send("Fout bij ophalen data uit database.");
+//     }
+// }
+async function listAllMovies(req, res) {
+  try {
+      // standaar pagina is 0
+      const perPage = 100;
+      const page = parseInt(req.query.page) || 0; 
+
+      // Haal de data op met limit en skip
+      // skip(100) slaat de eerste 100 over, limit(100) pakt de volgende 100
+      const data = await moviesCollection.find()
+          .skip(page * perPage)
+          .limit(perPage)
+          .toArray();
+      
+      // Geef de huidige pagina mee aan ejs om het "zie meer" linkje te maken
+      res.render('list.ejs', { 
+          data: data, 
+          nextPage: page + 1 
+      });
+  } catch (error) {
+      console.error("Fout bij ophalen movies:", error);
+      res.status(500).send("Fout bij laden films");
+  }
 }
 
-app.get('/movies', listMovies);
+app.get('/movies', listAllMovies);
 
 // // ////////////////// STATIC // ////////////////// 
 app.get('/', (req, res) => {
