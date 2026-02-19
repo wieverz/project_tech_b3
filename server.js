@@ -15,8 +15,10 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 require('dotenv').config();
 
 // 1. Maak de variabele hier globaal aan
+let usersCollection;
 let moviesCollection;
 
+// 2. Je client configuratie (die moet blijven staan!)
 const uri = process.env.URI; 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -29,17 +31,19 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    const db = client.db("sample_mflix");
+    
+    // 3. CRUCIAAL: Haal hier 'const' of 'let' weg!
+    // We vullen nu de variabelen die we bij stap 1 hebben gemaakt.
+    moviesCollection = db.collection("movies");
+    usersCollection = db.collection("users"); 
 
-    // 2. Vul de variabele zodra de verbinding staat
-    const collectionName = process.env.DB_COLLECTION || "movies"; 
-    moviesCollection = client.db("sample_mflix").collection(collectionName);
-
+    console.log("Database verbinding succesvol!");
   } catch (error) {
-    console.error("Er ging iets mis bij het verbinden:", error);
+    console.error("Verbindingsfout:", error);
   }
 }
+
 run().catch(console.dir);
 
 // async function listAllMovies(req, res) { // oude versie, de nieuwe stopt na 200 films om de pagina sneller te laden.
@@ -159,45 +163,74 @@ app.get('/studenten', (req, res) => {
 
 // /////// INLOGGEN: // //////// 
 app.get('/login', (req, res) => {
-  console.log('we gaan de pagina renderen');
   res.render('inloggen')});
 
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
+  app.post('/login', async (req, res) => {
+    try {
+      const { username, password } = req.body;
   
-  const data = JSON.parse(fs.readFileSync('users.json', 'utf8'));
-  const users = data.users;
-
-  // Zoek de gebruiker, 3x = want alles moet gelijk zijn
-  const myUser = users.find(u => u.name === username && u.password === password);
-
-  if (myUser) {
-    console.log('Succesvol ingelogd:', username);
-    res.redirect('/studenten');
-  } else {
-    console.log('Inloggen mislukt');
-    res.send('Ongeldige gebruikersnaam of wachtwoord. <a href="/login">Probeer opnieuw</a>');
-  }
-});
+      // Zoek een document waar zowel de naam ALS het wachtwoord kloppen
+      const user = await usersCollection.findOne({ 
+        name: username, 
+        password: password 
+      });
+  
+      if (user) {
+        console.log('Inloggen gelukt voor:', username);
+        res.redirect('/studenten');
+      } else {
+        res.send('Oeps! Onjuiste gegevens. <a href="/login">Nog een keer?</a>');
+      }
+    } catch (err) {
+      res.status(500).send("Database fout tijdens inloggen.");
+    }
+  });
 
 // /////// REGISTREREN: // //////// 
 app.get('/register', (req, res) => {
   res.render('register'); 
 });
 
-app.post('/register', (req, res) => { // toegegeven dit is met hulp van chat, maar het werkt!
-  const { username, password } = req.body;
-  const data = JSON.parse(fs.readFileSync('users.json'));
-  const bestaatAl = data.users.find(u => u.name === username);
-  if (bestaatAl) {
-      return res.send('Deze gebruikersnaam bestaat al! <a href="/register">Probeer opnieuw</a>');
-  }
-  data.users.push({ name: username, password: password });
-  fs.writeFileSync('users.json', JSON.stringify(data, null, 2));
-  console.log('Nieuw account aangemaakt:', username);
-  res.redirect('/login');
-});
+// app.post('/register', (req, res) => { // toegegeven dit is met hulp van chat, maar het werkt!
+//   const { username, password } = req.body;
+//   const data = JSON.parse(fs.readFileSync('users.json'));
+//   const bestaatAl = data.users.find(u => u.name === username);
+//   if (bestaatAl) {
+//       return res.send('Deze gebruikersnaam bestaat al! <a href="/register">Probeer opnieuw</a>');
+//   }
+//   data.users.push({ name: username, password: password });
+//   fs.writeFileSync('users.json', JSON.stringify(data, null, 2));
+//   console.log('Nieuw account aangemaakt:', username);
+//   res.redirect('/login');
+// });
+app.post('/register', async (req, res) => {
+  try {
+    // Haal email en age ook uit het formulier
+    const { username, email, age, password } = req.body;
 
+    const userExists = await usersCollection.findOne({ name: username });
+    if (userExists) {
+      return res.send('Deze naam is al bezet.');
+    }
+
+    const newUser = {
+      name: username,
+      email: email,             // Wordt opgeslagen als tekst
+      age: Number(age),         // Zet het om naar een getal voor berekeningen later
+      password: password, 
+      createdAt: new Date()
+    };
+
+    await usersCollection.insertOne(newUser);
+    
+    console.log('Nieuwe user incl. email en leeftijd opgeslagen:', username);
+    res.redirect('/login');
+
+  } catch (err) {
+    console.error("Fout bij registreren:", err);
+    res.status(500).send("Er ging iets mis.");
+  }
+});
 
 // ////////////////// DATA SETS // ////////////////// 
 const filmdata = [
