@@ -194,7 +194,7 @@ collection:
 
 is iets lastiger te begrijpen, maar uiteindelijk waarschijnlijk beter en mogelijk sneller.
 
-hw/ oefening voor mezelf:
+----- hw/ oefening voor mezelf: -----
 probeer een nieuw account aan te maken.
 inloggen
 
@@ -204,5 +204,33 @@ Security
 hashing:
 je begint bijvoorbeeld met een simpel wachtwoord, maar door die data te "hashen" krijg je een versleutelde reeks als: "@#$%@#$!#@DAFAfwaf" terug.
 
+extra info API:
+.json format is aangeraden
+is een soort toegangpoort naar een data set.
+mayeb beter kijken naar hoe geschikt de API's zijn die we voor het onderwerp gebruiken.
+zoeken naar beroeps API's?
+maybe hollywood apis bekijken.
 
 
+extra info MongoDB:
+leeftijd van de sessie:
+bijv. als je op een publieke computer zit, zorgt een session leeftijd dat je na bepaalde tijd uitlogt.
+een soort extra veiligheids maatregel.
+
+req.session."..." wordt verwijderd nadat de session is afgelopen.
+en is niet nuttig als er niemand ingelogd is
+
+EINDOPDRACHT:
+componenten:
+- zoekpagina: gegevens uit de DB/API halen en tonen
+- filteren: Gegevens filteren met bijv. selectievakjes
+- account: registratie en login voor gebruikers 
+- favorieten: items als favorieten opslaan in account
+- matching: koppelen met "matches"
+
+uiteindelijk volledige node omgeving als .zip inleveren, inc .env en alles/
+laatste 4 weken volledig om aan de website te zitten.
+
+
+----- hw/ oefening voor mezelf: -----
+kijk opnieuw naar MongoDB kennisbank.

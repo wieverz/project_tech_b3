@@ -1,9 +1,16 @@
+// /////////// CONSTS: //////////// //
+
+// /////////// CONFIG: //////////// //
+
+// /////////// APP...: //////////// //
+
 const express = require('express');
 const fs = require('fs');
 const app = express();
 const port = 4000;
-
 const session = require('express-session');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 app.use(session({
   secret: 'redbullgeeftjevleugels', // willekeurige lange zin
@@ -14,11 +21,8 @@ app.use(session({
     maxAge: 3600000 // Hoe lang de cookie geldig is (1 uur)
   }
 }));
-
 app.use(express.urlencoded({ extended: true })); // deze moet ook blijkbaar
-
 app.use(express.static("static"));
-
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
@@ -31,7 +35,7 @@ require('dotenv').config();
 let usersCollection;
 let moviesCollection;
 
-// 2. Je client configuratie (die moet blijven staan!)
+// client configuratie (die moet blijven staan)
 const uri = process.env.URI; 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -220,26 +224,53 @@ app.get('/login', (req, res) => {
   //     res.status(500).send("Database fout tijdens inloggen.");
   //   }
   // });
+  console.log('interlude')
+  // app.post('/login', async (req, res) => {
+  //   try {
+  //     const { username, password } = req.body;
+  //     const user = await usersCollection.findOne({ name: username, password: password });
   
+  //     if (user) {
+  //       // sessie-cookie aanmaken
+  //       req.session.userId = user._id; 
+  //       req.session.username = user.name;
+
+  //       console.log('Sessie aangemaakt voor:', req.session.username);
+  //       res.redirect('/studenten');
+  //     } else {
+  //       res.send('Onjuist wachtwoord of naam.');
+  //     }
+  //   } catch (err) {
+  //     res.status(500).send("Fout tijdens inloggen.");
+  //   }
+  // });
+
   app.post('/login', async (req, res) => {
     try {
       const { username, password } = req.body;
-      const user = await usersCollection.findOne({ name: username, password: password });
+  
+      // 1. Zoek de gebruiker alleen op naam
+      const user = await usersCollection.findOne({ name: username });
   
       if (user) {
-        // sessie-cookie aanmaken
-        req.session.userId = user._id; 
-        req.session.username = user.name;
-
-        console.log('Sessie aangemaakt voor:', req.session.username);
-        res.redirect('/studenten');
-      } else {
-        res.send('Onjuist wachtwoord of naam.');
+        // 2. Vergelijk het ingevulde wachtwoord met de hash uit de database
+        const match = await bcrypt.compare(password, user.password);
+  
+        if (match) {
+          req.session.userID = user._id;
+          req.session.username = user.name;
+          return res.redirect('/studenten');
+        }
       }
+      // Als er geen user is of de match faalt:
+      res.send('Onjuiste inloggegevens.');
+      
     } catch (err) {
-      res.status(500).send("Fout tijdens inloggen.");
+      res.status(500).send("Serverfout.");
     }
   });
+
+
 // /////// REGISTREREN: // //////// 
 app.get('/register', (req, res) => {
   res.render('register'); 
@@ -268,11 +299,14 @@ app.post('/register', async (req, res) => {
       return res.send('Deze naam is al bezet.');
     }
 
+    // De '10' is de "salt rounds" aka standaard versleuteling
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const newUser = {
       name: username,
       email: email,             // Wordt opgeslagen als tekst
       age: Number(age),         // Zet het om naar een getal voor berekeningen later
-      password: password, 
+      password: hashedPassword, // niet meer normale wachtwoord opslaan
       createdAt: new Date()
     };
 
@@ -286,6 +320,7 @@ app.post('/register', async (req, res) => {
     res.status(500).send("Er ging iets mis.");
   }
 });
+
 
 // ////////////////// DATA SETS // ////////////////// 
 const filmdata = [
