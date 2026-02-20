@@ -2,6 +2,19 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 const port = 4000;
+
+const session = require('express-session');
+
+app.use(session({
+  secret: 'redbullgeeftjevleugels', // willekeurige lange zin
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: false, // Zet op true als je https gebruikt, maar op localhost is false prima
+    maxAge: 3600000 // Hoe lang de cookie geldig is (1 uur)
+  }
+}));
+
 app.use(express.urlencoded({ extended: true })); // deze moet ook blijkbaar
 
 app.use(express.static("static"));
@@ -152,40 +165,81 @@ app.get('/data', (req, res) => {
   res.send('Hier kan je straks data api zien')
 });
 
-app.get('/studenten', (req, res) => {
-  const studentenLijst = [
-      { naam: 'Alice', specialisatie: 'Frontend' },
-      { naam: 'Bob', specialisatie: 'Backend' }
-  ];
-  // om de ejs pagina te laten zien right?
-  res.render('studenten', { studenten: studentenLijst });
+// Deze functie checkt of ik ingelogd ben
+function checkInlog(req, res, next) {
+  if (req.session.username) {
+    next(); // ga maar door naar de volgende stap
+  } else {
+    res.redirect('/login'); // Terug naar de login pagina
+  }
+}
+
+// nu kan je alleen hierheen door eerst in te loggen
+app.get('/studenten', checkInlog, (req, res) => {
+    const studentenLijst = [
+    { naam: 'Alice', specialisatie: 'Frontend' },
+    { naam: 'Bob', specialisatie: 'Backend' }
+  ];  
+    res.render('studenten', { 
+      user: req.session.username,
+      studenten: studentenLijst
+       });
+    
 });
+
+// app.get('/studenten', (req, res) => { // zo was die toegangkelijk zonder in te loggen
+//   const studentenLijst = [
+//       { naam: 'Alice', specialisatie: 'Frontend' },
+//       { naam: 'Bob', specialisatie: 'Backend' }
+//   ];
+//   // om de ejs pagina te laten zien right?
+//   res.render('studenten', { studenten: studentenLijst });
+// });
 
 // /////// INLOGGEN: // //////// 
 app.get('/login', (req, res) => {
   res.render('inloggen')});
 
+  // app.post('/login', async (req, res) => { // oude versie, niet secure
+  //   try {
+  //     const { username, password } = req.body;
+  
+  //     // Zoek een document waar zowel de naam ALS het wachtwoord kloppen
+  //     const user = await usersCollection.findOne({ 
+  //       name: username, 
+  //       password: password 
+  //     });
+  
+  //     if (user) {
+  //       console.log('Inloggen gelukt voor:', username);
+  //       res.redirect('/studenten');
+  //     } else {
+  //       res.send('Oeps! Onjuiste gegevens. <a href="/login">Nog een keer?</a>');
+  //     }
+  //   } catch (err) {
+  //     res.status(500).send("Database fout tijdens inloggen.");
+  //   }
+  // });
+  
   app.post('/login', async (req, res) => {
     try {
       const { username, password } = req.body;
-  
-      // Zoek een document waar zowel de naam ALS het wachtwoord kloppen
-      const user = await usersCollection.findOne({ 
-        name: username, 
-        password: password 
-      });
+      const user = await usersCollection.findOne({ name: username, password: password });
   
       if (user) {
-        console.log('Inloggen gelukt voor:', username);
+        // sessie-cookie aanmaken
+        req.session.userId = user._id; 
+        req.session.username = user.name;
+
+        console.log('Sessie aangemaakt voor:', req.session.username);
         res.redirect('/studenten');
       } else {
-        res.send('Oeps! Onjuiste gegevens. <a href="/login">Nog een keer?</a>');
+        res.send('Onjuist wachtwoord of naam.');
       }
     } catch (err) {
-      res.status(500).send("Database fout tijdens inloggen.");
+      res.status(500).send("Fout tijdens inloggen.");
     }
   });
-
 // /////// REGISTREREN: // //////// 
 app.get('/register', (req, res) => {
   res.render('register'); 
@@ -203,6 +257,7 @@ app.get('/register', (req, res) => {
 //   console.log('Nieuw account aangemaakt:', username);
 //   res.redirect('/login');
 // });
+
 app.post('/register', async (req, res) => {
   try {
     // Haal email en age ook uit het formulier

@@ -196,4 +196,13 @@ is iets lastiger te begrijpen, maar uiteindelijk waarschijnlijk beter en mogelij
 
 hw/ oefening voor mezelf:
 probeer een nieuw account aan te maken.
-- 
+inloggen
+
+Week 3 - 20 feb:
+Security
+
+hashing:
+je begint bijvoorbeeld met een simpel wachtwoord, maar door die data te "hashen" krijg je een versleutelde reeks als: "@#$%@#$!#@DAFAfwaf" terug.
+
+
+
