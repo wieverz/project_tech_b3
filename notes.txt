@@ -263,3 +263,9 @@ denk aan switchen tussen een grid en list view of een zoekbalk
 
 check listJS oefeningen op DLO voor meer.
 
+
+----- Linters: -----
+
+linter zijn een soort tool om codestandaarden te hanteren als bijvoorbeeld de wc3 validation voor html doet, linters zijn er voor meerdere talen.
+- stylelint voor css, kan je ook als plugin in vsCode installeren.
+- eslint voor js.
