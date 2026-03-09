@@ -231,6 +231,35 @@ componenten:
 uiteindelijk volledige node omgeving als .zip inleveren, inc .env en alles/
 laatste 4 weken volledig om aan de website te zitten.
 
+req.session.filter = {"cameraman", "directeur"}
+in de res.render zet je dan de filters als req mee aan de pagina
+
+voorkeuren kan je als formulier in de database opslaan
+filters kan je makkelijker in de req.session opslaan
+
+<a href = "/makeFavourite?id=45">
+app.get("/makeFavourite:id"),(req,res)=>{
+    MongoDB
+    add to faves functie id=45
+    ----- dit krijgen we nog verder uitgelegd tho -----
+}
+
+listJS maakt filters direct in de frontEnd en skipt de backend.
+die haalt eerst alle volledige data binnen en toont dan alleen wat je filtert.
+
+----- TO DO: -----
+
 
 ----- hw/ oefening voor mezelf: -----
 kijk opnieuw naar MongoDB kennisbank.
+
+
+Week 4:
+
+- listJS
+list js is meer frontEnd dan backEnd.
+is gefocusd op filteren en sorteren en dergelijken
+denk aan switchen tussen een grid en list view of een zoekbalk
+
+check listJS oefeningen op DLO voor meer.
+

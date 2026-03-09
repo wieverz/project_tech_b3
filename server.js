@@ -10,7 +10,7 @@ const app = express();
 const port = 4000;
 const session = require('express-session');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const saltRounds = 10; // ik heb m hier een const gemaakt zodat ik niet overal zelf moet zorgen dat k hetzelfde getal invoer
 
 app.use(session({
   secret: 'redbullgeeftjevleugels', // willekeurige lange zin
@@ -25,7 +25,6 @@ app.use(express.urlencoded({ extended: true })); // deze moet ook blijkbaar
 app.use(express.static("static"));
 app.set('view engine', 'ejs');
 app.set('views', './views');
-
 
 /////// green vanwege mongo db test:
 const { MongoClient, ServerApiVersion } = require("mongodb");
