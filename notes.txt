@@ -109,3 +109,163 @@ async function login() {
         console.error('Er is een fout opgetreden bij het inloggen:', error)
     }
 }
+
+
+week 3:
+
+
+MongoDB
+
+server is weird ash
+
+Find functie:
+
+const db = client.db(process.env."gebruiker naam")
+const collectie = db.collection(process.env."collection naam")
+async funtion listAllMovies(req,res) {
+    find:
+    data = await collection.find().toArray()
+    res.render('list.ejs',{data: data})
+    
+    findOne:
+    // data = await colelction.findOne ({ // liever naar het object id, = accurater
+        title.
+    })
+
+    insterOne:
+    result = await colelction.insterOne
+
+    update:
+    const result = await collection.updateOne({
+        _id:
+    })
+
+    delete:
+    const result = await collection.deleteOne
+}
+
+    // // 3 database en collectie
+    // const database = client.db("sample_mflix");
+    // const movies = database.collection("movies");
+
+    // // 4 zoekopdracht maken
+    // const query = { runtime: { $lt: 15 } };
+    // const sortFields = { title: 1 };
+    // const projectFields = { _id: 0, title: 1, imdb: 1 };
+
+    // // 5 zoeken uitvoeren
+    // const cursor = movies.find(query).sort(sortFields).project(projectFields);
+
+    // // 6 resultaten in de console.log
+    // if ((await movies.countDocuments(query)) === 0) {
+    //   console.log("No documents found!");
+    // }
+
+    // for await (const doc of cursor) {
+    //   console.dir(doc);
+    // }
+
+
+Week 3 - 19 feb:
+
+- document in MongoDB:
+binnen een collection heb je meerdere documents
+collection:
+- users
+- - {id:3123123123, naam"blabla",...} {document} <- dit is een document
+- - {id:1212111212, naam"andersblabla",matches:[121212],[24523423423],...} {document} <- dit is een document
+-
+collection:
+- personeel
+- - {id:"53421", naam"danny", stad:"amsterdam"...} {document}
+collection:
+- steden
+- - {stad:"amsterdam", personeel:[123,456,789,...]}
+
+iedere keer als iemand registreerd, en aangeeft dat die bijvoorbeeld in amsterdam woont. voeg je de ID van die registratie toe aan de collectie van de stad, zodat je makkelijk kan matchen o.b.v. locatie, en hier niet los op hoeven filteren.
+hiermee hoef je niet een paar honderd keer voor elk persoon te kijken waar ze vandaan komen, maar eerst kijken of ze uit amsterdam komen en dan pas weergeven.
+
+is handig om beide te doen, zodat je ook nog kan kijken dat diegene uit dammie komt ook wanneer je niet filtert op stad.
+
+je kan dit verdiepen door nog een collectie aan te maken qua type, en daarin alle id's opnieuw filteren:
+collection:
+- beroep:
+- - {beroep:"camera":, personeel:[123,456,23434,567]}
+
+is iets lastiger te begrijpen, maar uiteindelijk waarschijnlijk beter en mogelijk sneller.
+
+----- hw/ oefening voor mezelf: -----
+probeer een nieuw account aan te maken.
+inloggen
+
+Week 3 - 20 feb:
+Security
+
+hashing:
+je begint bijvoorbeeld met een simpel wachtwoord, maar door die data te "hashen" krijg je een versleutelde reeks als: "@#$%@#$!#@DAFAfwaf" terug.
+
+extra info API:
+.json format is aangeraden
+is een soort toegangpoort naar een data set.
+mayeb beter kijken naar hoe geschikt de API's zijn die we voor het onderwerp gebruiken.
+zoeken naar beroeps API's?
+maybe hollywood apis bekijken.
+
+
+extra info MongoDB:
+leeftijd van de sessie:
+bijv. als je op een publieke computer zit, zorgt een session leeftijd dat je na bepaalde tijd uitlogt.
+een soort extra veiligheids maatregel.
+
+req.session."..." wordt verwijderd nadat de session is afgelopen.
+en is niet nuttig als er niemand ingelogd is
+
+EINDOPDRACHT:
+componenten:
+- zoekpagina: gegevens uit de DB/API halen en tonen
+- filteren: Gegevens filteren met bijv. selectievakjes
+- account: registratie en login voor gebruikers 
+- favorieten: items als favorieten opslaan in account
+- matching: koppelen met "matches"
+
+uiteindelijk volledige node omgeving als .zip inleveren, inc .env en alles/
+laatste 4 weken volledig om aan de website te zitten.
+
+req.session.filter = {"cameraman", "directeur"}
+in de res.render zet je dan de filters als req mee aan de pagina
+
+voorkeuren kan je als formulier in de database opslaan
+filters kan je makkelijker in de req.session opslaan
+
+<a href = "/makeFavourite?id=45">
+app.get("/makeFavourite:id"),(req,res)=>{
+    MongoDB
+    add to faves functie id=45
+    ----- dit krijgen we nog verder uitgelegd tho -----
+}
+
+listJS maakt filters direct in de frontEnd en skipt de backend.
+die haalt eerst alle volledige data binnen en toont dan alleen wat je filtert.
+
+----- TO DO: -----
+
+
+----- hw/ oefening voor mezelf: -----
+kijk opnieuw naar MongoDB kennisbank.
+
+
+Week 4:
+
+- listJS
+list js is meer frontEnd dan backEnd.
+is gefocusd op filteren en sorteren en dergelijken
+denk aan switchen tussen een grid en list view of een zoekbalk
+
+check listJS oefeningen op DLO voor meer.
+
+
+----- Linters: -----
+
+linter zijn een soort tool om codestandaarden te hanteren als bijvoorbeeld de wc3 validation voor html doet, linters zijn er voor meerdere talen.
+- stylelint voor css, kan je ook als plugin in vsCode installeren.
+- eslint voor js.
